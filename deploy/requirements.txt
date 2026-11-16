@@ -1,0 +1,16 @@
+# Streamlit Community Cloud installs this file (it sits next to the entrypoint deploy/streamlit_app.py).
+# CPU-only torch, no GUI OpenCV, and the exact numpy / scikit-learn the models/*.joblib files were saved with.
+# FaceNet (M3/M4) only: the VGG-Face weights (580 MB, weights/) are not in git, so M1/M2 are hidden online.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.7.1
+torchvision==0.22.1
+numpy==2.2.6
+scikit-learn==1.6.1
+joblib==1.5.0
+facenet-pytorch==2.5.3      # same code as 2.6.0, without its numpy<2 / torch<2.3 pins
+opencv-python-headless==4.12.0.88
+pillow==11.2.1
+h5py==3.14.0
+requests==2.32.3
+tqdm==4.67.1
+streamlit==1.60.0

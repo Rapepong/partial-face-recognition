@@ -115,6 +115,14 @@ cd .. && streamlit run app.py                        # web demo: upload or camer
 
 All three default to `models/lfw_M2.joblib`; pass `--model ../models/<file>.joblib` for another one.
 
+**Online demo (Streamlit Community Cloud).** `deploy/streamlit_app.py` runs `app.py` with
+`deploy/requirements.txt` (CPU torch, headless OpenCV, the numpy / scikit-learn the joblibs were saved with,
+facenet-pytorch 2.5.3 = 2.6.0 without its old pins). The VGG-Face weights are not in git, so the web app hides
+M1/M2 and offers the FaceNet models, default `lfw+custom_M4` with tau = `tau_strangers_5pct`.
+At [share.streamlit.io](https://share.streamlit.io), sign in with a GitHub account that can read this repo, then
+Create app > repository `lovernashiga-code/projectjg`, branch `main`, main file path `deploy/streamlit_app.py`,
+Advanced settings > Python 3.13 > Deploy. The first start takes a few minutes (torch install, FaceNet weights).
+
 **Recognising the group members** (slide 6, Custom Dataset): record 30-40 photos per person in at least two
 sessions (another day, room or lighting) so that step 3 can test on a session the model never saw. Record a few
 people outside the group with `--stranger` to see how often a stranger gets a member's name:
@@ -191,6 +199,7 @@ src/predict.py                recognise faces in photos
 src/webcam.py                 live recognition from a webcam
 src/capture_faces.py          record webcam photos for the custom dataset
 app.py                        Streamlit demo
+deploy/                       Streamlit Community Cloud entrypoint + CPU requirements
 data/      datasets (not in git)       weights/  VGG-Face weights (not in git)
 results/   metrics, predictions, figures (LFW; other datasets in results/<dataset>/)
 models/    trained Softmax classifiers (*.joblib, ~2 MB for VGG-Face)
@@ -385,6 +394,18 @@ cd .. && streamlit run app.py                        # เว็บเดโม:
 - ใช้โมเดลอื่นได้ด้วย `--model ../models/<ชื่อไฟล์>.joblib` เช่น `lfw+custom_M2+aug.joblib` (ชื่อไฟล์คือ `<ชุดข้อมูล>_<โมเดล>.joblib`)
 - รูปที่มีหลายใบหน้าจะทายทุกใบหน้า และกรองกรอบที่ MTCNN ให้ความมั่นใจต่ำกว่า 0.95 ออก (กันกรอบหลอกในพื้นหลัง)
 
+**เว็บออนไลน์ (Link - Deployment) ด้วย Streamlit Community Cloud (ฟรี)**
+
+1. เข้า [share.streamlit.io](https://share.streamlit.io) ล็อกอินด้วยบัญชี GitHub ที่เข้ารีโปนี้ได้
+2. กด Create app → Deploy a public app from GitHub แล้วกรอก
+   - Repository: `lovernashiga-code/projectjg` · Branch: `main` · Main file path: `deploy/streamlit_app.py`
+   - Advanced settings → Python version: 3.13
+3. กด Deploy รอครั้งแรกประมาณ 5–10 นาที (ติดตั้ง torch และโหลด weights ของ FaceNet) จะได้ลิงก์ `https://<ชื่อ>.streamlit.app`
+
+- เซิร์ฟเวอร์ใช้ `deploy/requirements.txt` (torch แบบ CPU, OpenCV แบบไม่มีหน้าจอ) ไม่ใช่ `requirements.txt` ที่ราก
+- weights ของ VGG-Face (580 MB) ไม่ได้อยู่ใน git บนเว็บจึงมีเฉพาะ FaceNet (M3/M4) ค่าเริ่มต้นคือ `lfw+custom_M4` ที่ τ 0.95
+- เว็บรู้จักชื่อสมาชิกกลุ่ม (โมเดลไม่มีรูปหน้า มีแค่ตัวจำแนก) ใครมีลิงก์ก็ใช้ได้ ปิดแอปได้ที่หน้า share.streamlit.io เมื่อส่งงานเสร็จ
+
 ### ทำให้ระบบรู้จักสมาชิกกลุ่ม 5 คน
 
 ถ่ายภาพสมาชิกแต่ละคนอย่างน้อย **2 รอบ** (คนละวัน คนละห้อง หรือคนละแสง) รอบละประมาณ 30–40 ภาพ เพื่อให้ step 3 มีรอบที่
@@ -457,6 +478,7 @@ decision ของ SVM เอง ส่วน M1–M4 ต่างจากร�
 | `src/webcam.py` | ทายสดจากเว็บแคม |
 | `src/capture_faces.py` | ถ่ายภาพใบหน้าจากเว็บแคมเก็บเป็นชุดข้อมูลของกลุ่ม (หรือของคนแปลกหน้า) |
 | `app.py` | เว็บเดโมด้วย Streamlit |
+| `deploy/` | ไฟล์สำหรับขึ้นเว็บ Streamlit Community Cloud (`streamlit_app.py`, `requirements.txt` แบบ CPU) |
 | `data/`, `weights/` | ชุดข้อมูลและน้ำหนักโมเดล (ไม่อยู่ใน git) |
 | `results/` | ผลการทดลอง ตัวเลข กราฟ (ชุดอื่นนอกจาก LFW อยู่ใน `results/<ชื่อชุด>/`) |
 | `models/` | ตัวจำแนก Softmax ที่เทรนแล้ว (`*.joblib`) สร้างโดย step 3 |
