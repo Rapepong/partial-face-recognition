@@ -25,6 +25,8 @@ const FEI = path.join(R, "fei");
 const feiM = has(path.join(FEI, "metrics.json")) ? rd(path.join(FEI, "metrics.json")) : null;
 const feiStats = has(path.join(FEI, "dataset_stats.json")) ? rd(path.join(FEI, "dataset_stats.json")) : null;
 const VID = path.join(R, "video");
+const APP_URL = "https://partial-face-recognition.streamlit.app", REPO_URL = "https://github.com/Rapepong/partial-face-recognition";
+const bare = (u) => u.replace("https://", "");
 const video = has(path.join(VID, "video_check.json")) ? rd(path.join(VID, "video_check.json")) : null;
 const videoM1 = has(path.join(VID, "M1", "video_check.json")) ? rd(path.join(VID, "M1", "video_check.json")) : null;
 const CUSTD = path.join(R, "lfw+custom");
@@ -338,9 +340,12 @@ section("Presentation");
   text(s, [{ text: "สมาชิกใน session ที่โมเดลไม่เคยเห็น (M4)", options: { bold: true, breakLine: true } },
     { text: `หน้าเต็ม ${p(ma.M4.full)}% · หน้ากาก ${p(ma.M4.mask)}% · แว่น ${p(ma.M4.sunglasses)}%`, options: { color: HEX.blue, bold: true, breakLine: true } },
     { text: " ", options: { breakLine: true, fontSize: 5 } },
-    { text: `M4 ไม่เคยเรียกผิดคน (ที่พลาดตอบ Unknown) · M2 ตอบชื่อได้มากกว่า แต่เรียกคนแปลกหน้าเป็นสมาชิก 1 ครั้ง · สมาชิก 3 คน + คนแปลกหน้า 1 คน ถ่ายช่วงเวลาใกล้กัน = ระดับเดโม` }],
+    { text: `M4 ไม่เคยเรียกผิดคน (ที่พลาดตอบ Unknown) · M2 ตอบชื่อได้มากกว่า แต่เรียกคนแปลกหน้าเป็นสมาชิก 1 ครั้ง · สมาชิก 3 คน + คนแปลกหน้า 1 คน ถ่ายช่วงเวลาใกล้กัน = ระดับเดโม`, options: { breakLine: true } },
+    { text: " ", options: { breakLine: true, fontSize: 5 } },
+    { text: "ลองเองบนเว็บ: ", options: { bold: true } },
+    { text: bare(APP_URL), options: { bold: true, color: HEX.blue, hyperlink: { url: APP_URL } } }],
     { x: 8.35, y: 4.05, w: 4.2, h: 2.6, fontSize: 12, paraSpaceAfter: 2 });
-  s.addNotes("[กฤต] เรานำโมเดลไปใช้กับวิดีโอจริงของกลุ่ม สมาชิกลงทะเบียนด้วยคลิปหน้าเต็ม 2 คลิป แล้วทดสอบกับคลิปที่ใส่หน้ากาก ใส่แว่น และเอามือปิด ระบบวาดกรอบ ลูกศร และชื่อของทุกคน คนแปลกหน้าขึ้น Unknown ตารางด้านขวาสรุปผลทุกคลิป โมเดล FaceNet ไม่เคยเรียกผิดคน ส่วน VGG-Face ตอบชื่อได้มากกว่าแต่เคยเรียกคนแปลกหน้าเป็นสมาชิกหนึ่งครั้ง");
+  s.addNotes("[กฤต] เรานำโมเดลไปใช้กับวิดีโอจริงของกลุ่ม สมาชิกลงทะเบียนด้วยคลิปหน้าเต็ม 2 คลิป แล้วทดสอบกับคลิปที่ใส่หน้ากาก ใส่แว่น และเอามือปิด ระบบวาดกรอบ ลูกศร และชื่อของทุกคน คนแปลกหน้าขึ้น Unknown ตารางด้านขวาสรุปผลทุกคลิป โมเดล FaceNet ไม่เคยเรียกผิดคน ส่วน VGG-Face ตอบชื่อได้มากกว่าแต่เคยเรียกคนแปลกหน้าเป็นสมาชิกหนึ่งครั้ง และระบบนี้ deploy เป็นเว็บแล้วที่ partial-face-recognition.streamlit.app อัปโหลดรูปหรือถ่ายจากกล้องเพื่อลองได้เลย");
 }
 
 { // 11 conclusion
@@ -379,7 +384,11 @@ section("Presentation");
   const s = pres.addSlide({ masterName: "DARK", sectionTitle: currentSection });
   text(s, "Q & A", { x: MX, y: 1.4, w: 5.5, h: 1.4, fontSize: 64, bold: true, color: "FFFFFF" });
   text(s, "ขอบคุณครับ", { x: MX, y: 2.85, w: 5.5, h: 0.9, fontSize: 34, bold: true, color: "7FB0EE" });
-  text(s, "Code: README.md · src/ · ผลทั้งหมดใน results/", { x: MX, y: 3.9, w: 5.5, h: 0.5, fontSize: 13, color: "8A93A6" });
+  text(s, [{ text: "เว็บเดโม (Deployment)", options: { bold: true, color: "FFFFFF", breakLine: true } },
+    { text: bare(APP_URL), options: { color: "7FB0EE", hyperlink: { url: APP_URL }, breakLine: true } },
+    { text: "Code (GitHub)", options: { bold: true, color: "FFFFFF", breakLine: true } },
+    { text: bare(REPO_URL), options: { color: "7FB0EE", hyperlink: { url: REPO_URL } } }],
+    { x: MX, y: 3.9, w: 5.6, h: 1.5, fontSize: 14, paraSpaceAfter: 2 });
   const refs = ["[1] Alfattama, Kanungo & Bisoy (2021). Face Recognition from Partial Face Data. APSIT 2021, IEEE. doi:10.1109/APSIT52773.2021.9641286",
     "[2] Zhang et al. (2016). MTCNN. IEEE SPL 23(10)", "[3] Parkhi, Vedaldi & Zisserman (2015). Deep Face Recognition. BMVC",
     "[4] Cao et al. (2018). VGGFace2. IEEE FG", "[5] Huang et al. (2007). Labeled Faces in the Wild. UMass TR 07-49",
